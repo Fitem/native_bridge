@@ -36,42 +36,41 @@ class _WebViewPageState<WebViewPage> extends State {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Native Bridge"),
-      ),
-      body: Column(
-        children: [
-          Row(
-            children: [
-              TextButton(
-                onPressed: () async {
-                  var isHome = await NativeBridgeHelper.sendMessage(
-                      Message(api: "isHome"), _nativeBridgeController)
-                      .future ??
-                      false;
-                  AppUtil.show("isHome:$isHome");
-                },
-                child: const Text("isHome"),
+        actions: [
+          PopupMenuButton(
+              // add icon, by default "3 dot" icon
+              // icon: Icon(Icons.book)
+              itemBuilder: (context) {
+            return [
+              const PopupMenuItem<int>(
+                value: 0,
+                child: Text("Is web home?"),
               )
-            ],
-          ),
-          Expanded(
-            child: WebView(
-              onWebViewCreated: (controller) {
-                _controller.complete(controller);
-              },
-              zoomEnabled: true,
-              gestureNavigationEnabled: true,
-              initialUrl: "",
-              //JS执行模式 是否允许JS执行
-              javascriptMode: JavascriptMode.unrestricted,
-              javascriptChannels: <JavascriptChannel>{
-                NativeBridge(
-                  controller: _nativeBridgeController =
-                      NativeBridgeController(controller: _controller.future),
-                )
-              },
-            ),
-          ),
+            ];
+          }, onSelected: (value) async {
+            var isHome = await NativeBridgeHelper.sendMessage(
+                        Message(api: "isHome"), _nativeBridgeController)
+                    .future ??
+                false;
+            AppUtil.show("isHome:$isHome");
+          })
         ],
+      ),
+      body: WebView(
+        onWebViewCreated: (controller) {
+          _controller.complete(controller);
+        },
+        zoomEnabled: true,
+        gestureNavigationEnabled: true,
+        initialUrl: "",
+        //JS执行模式 是否允许JS执行
+        javascriptMode: JavascriptMode.unrestricted,
+        javascriptChannels: <JavascriptChannel>{
+          NativeBridge(
+            controller: _nativeBridgeController =
+                NativeBridgeController(controller: _controller.future),
+          )
+        },
       ),
     );
   }

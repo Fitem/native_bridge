@@ -22,7 +22,8 @@ class NativeBridge implements JavascriptChannel {
         var callMethod = controller.callMethodMap[item.api];
         // 有相应的JS方法，则处理
         if (callMethod != null) {
-          item.data = await callMethod(item.data);
+          var data = await callMethod(item.data);
+          item.data = data.toString();
           // 回调js，H5接受消息
           var json = messageToJson(item);
           controller.runJavascript("receiveMessage($json)");

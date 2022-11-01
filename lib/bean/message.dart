@@ -9,23 +9,23 @@ String messageToJson(Message data) => json.encode(data.toJson());
 class Message {
   Message({
     required this.api,
-    required this.data,
-    required this.callbackId,
+    this.data,
+    this.callbackId,
   });
 
   String api;
-  String data;
-  String callbackId;
+  String? data;
+  String? callbackId;
 
   factory Message.fromJson(Map<String, dynamic> json) => Message(
-    api: json["api"],
-    data: json["data"],
-    callbackId: json["callbackId"],
-  );
+        api: json["api"],
+        data: json["data"],
+        callbackId: json["callbackId"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "api": api,
-    "data": data,
-    "callbackId": callbackId,
-  };
+        "api": api,
+        "data": data,
+        "callbackId": callbackId,
+      };
 }

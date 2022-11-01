@@ -6,12 +6,12 @@ import 'package:webview_flutter/webview_flutter.dart';
 ///  Name: iLotJsBridge
 ///  Created by Fitem on 2022/7/13
 class NativeBridge implements JavascriptChannel {
-  NativeBridge({required this.nativeBridgeImpl});
+  NativeBridge({required this.controller});
 
-  final NativeBridgeImpl nativeBridgeImpl;
+  final NativeBridgeImpl controller;
 
   @override
-  String get name => nativeBridgeImpl.name;
+  String get name => controller.name;
 
   @override
   JavascriptMessageHandler get onMessageReceived => (message) async {
@@ -19,13 +19,13 @@ class NativeBridge implements JavascriptChannel {
         NativeBridgeHelper.receiveMessage(message.message);
         // 处理H5的请求
         var item = messageFromJson(message.message);
-        var callMethod = nativeBridgeImpl.callMethodMap[item.api];
+        var callMethod = controller.callMethodMap[item.api];
         // 有相应的JS方法，则处理
         if (callMethod != null) {
           item.data = await callMethod(item.data);
           // 回调js，H5接受消息
           var json = messageToJson(item);
-          nativeBridgeImpl.runJavascript("receiveMessage($json)");
+          controller.runJavascript("receiveMessage($json)");
         }
       };
 }

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>ilot_root</title>
+		<script type="text/javascript" src="jsBridgeHelper.js"></script>
+		<script>
+        function getAppInfo() {
+            getVersionCode();
+            getVersionName();
+            getSystemVersion();
+            isApp();
+        }
+
+        async function getVersionCode() {
+            let appVersionCode = await window.jsBridgeHelper.sendMessage("getVersionCode", null);
+            document.getElementById("app_version_code").innerHTML = "app version code : " + appVersionCode;
+        }
+
+        async function getVersionName() {
+            let appVersionName = await window.jsBridgeHelper.sendMessage("getVersionName", null);
+            document.getElementById("app_version_name").innerHTML = "app version name : " + appVersionName.toString();
+        }
+
+        async function getSystemVersion() {
+            let systemVersion = await window.jsBridgeHelper.sendMessage("getSystemVersion", null);
+            document.getElementById("system_version").innerHTML = "system version : " + systemVersion.toString();
+        }
+
+        async function isApp() {
+            let isApp = await window.jsBridgeHelper.sendMessage("isApp", null);
+            document.getElementById("is_app").innerHTML = "is app : " + isApp.toString();
+        }
+
+        function receiveMessage(jsonStr) {
+            console.log('receiveMessage:', jsonStr)
+            if(jsonStr != undefined && jsonStr != "") {
+                let data = JSON.parse(JSON.stringify(jsonStr));
+                window.jsBridgeHelper.receiveMessage(data);
+            }
+        }
+		</script>
+	</head>
+	<body>
+		<div>
+			<span id="app_version_code">app version code : </span><br>
+			<span id="app_version_name">app version name : </span><br>
+			<span id="is_app">is app : </span><br>
+			<button onclick="getAppInfo()">测试js调用App获取版本信息</button>
+		</div>
+	</body>
+</html>

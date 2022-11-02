@@ -26,8 +26,9 @@ dependencies:
   fluttertoast: 8.0.8
 
   native_bridge:
-    git:
-      url: https://github.com/Fitem/native_bridge.git
+    path: ../
+#    git:
+#      url: https://github.com/Fitem/native_bridge.git
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -138,9 +138,11 @@ packages:
   native_bridge:
     dependency: "direct main"
     description:
-      path: ".."
-      relative: true
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: "9c5a54d4e084003bad875e41c9f3ce86cda2b303"
+      url: "https://github.com/Fitem/native_bridge.git"
+    source: git
     version: "0.0.1"
   package_info_plus:
     dependency: "direct main"

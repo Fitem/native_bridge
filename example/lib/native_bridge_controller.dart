@@ -9,8 +9,10 @@ import 'package:webview_flutter/webview_flutter.dart';
 class NativeBridgeController implements NativeBridgeImpl {
   NativeBridgeController({required this.controller});
 
+  // WebView控制器
   final Future<WebViewController> controller;
 
+  /// 对应JS调用Function集合
   @override
   Map<String, Function?> get callMethodMap => {
         // 版本号
@@ -36,9 +38,11 @@ class NativeBridgeController implements NativeBridgeImpl {
         }
       };
 
+  /// 指定JSChannel名称
   @override
   String get name => "nativeBridge";
 
+  /// 执行JS
   @override
   void runJavascript(String javaScriptString) {
     controller.then((controller) =>

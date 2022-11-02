@@ -42,10 +42,11 @@ class JSBridgeHelper {
 
     receiveMessage(message) {
         if (message.callbackId) {
+            // 通过callbackId 获取对应Promise
             const cb = this._popCallback(message.callbackId);
-            if (cb) {
+            if (cb) { //有值，则直接调用对应函数
                 cb(message.data);
-            } else {
+            } else {  //没有值，则是App请求获取值
                 if (message.api === 'isHome') {
                     this._postMessage(message.api, true.toString(), message.callbackId)
                 }

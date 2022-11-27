@@ -34,7 +34,7 @@ class NativeBridgeController implements NativeBridgeImpl {
               .future ??
               false;
           AppUtil.show("isHome:$isHome");
-          return true;
+          return isHome;
         }
       };
 

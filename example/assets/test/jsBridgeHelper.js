@@ -37,6 +37,13 @@ class JSBridgeHelper {
             });
 
             nativeBridge.postMessage(encoded);
+            // 增加回调异常容错机制，避免消息丢失导致一直阻塞
+            setTimeout(() => {
+                const cb = this._popCallback(callbackId)
+                if (cb) {
+                    cb(null)
+                }
+            }, 100)
         });
     }
 

@@ -14,10 +14,10 @@ class Message {
     this.isResponseFlag = false,
   });
 
-  String api;           // 调用方法api
-  String? data;         // 数据
-  String? callbackId;   // 对应id
-  bool? isResponseFlag;  // 是否是返回消息标记
+  String api; // 调用方法api
+  String? data; // 数据
+  String? callbackId; // 对应id
+  bool? isResponseFlag; // 是否是返回消息标记
 
   factory Message.fromJson(Map<String, dynamic> json) => Message(
         api: json["api"],

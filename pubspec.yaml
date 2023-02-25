@@ -1,6 +1,6 @@
 name: native_bridge
 description: A new Flutter JSBridge package.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/Fitem/native_bridge
 
 environment:

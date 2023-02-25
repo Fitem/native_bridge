@@ -1,5 +1,5 @@
 name: native_bridge
-description: A new Flutter JSBridge package.
+description: A Flutter plugin for JSBridge communication based on webview_flutter.
 version: 0.0.2
 homepage: https://github.com/Fitem/native_bridge
 

@@ -1,7 +1,7 @@
 name: native_bridge
-description: A new Flutter project.
+description: A new Flutter JSBridge package.
 version: 0.0.1
-homepage:
+homepage: https://github.com/Fitem/native_bridge
 
 environment:
   sdk: ">=2.16.2 <3.0.0"

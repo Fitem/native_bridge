@@ -1,12 +1,11 @@
 ///  Name: Native Bridge实现类
 ///  Created by Fitem on 2022/10/31
-abstract class NativeBridgeImpl {
-  NativeBridgeImpl({required this.name, required this.callMethodMap});
+mixin NativeBridgeImpl {
 
   /// javascript channel name
-  final String name;
+  get name;
   /// call method map
-  final Map<String, Function?> callMethodMap;
+  Map<String, Function?> get callMethodMap;
 
   /// 执行JS
   void runJavascript(String javaScriptString);

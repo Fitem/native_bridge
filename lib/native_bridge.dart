@@ -15,18 +15,27 @@ class NativeBridge implements JavascriptChannel {
 
   @override
   JavascriptMessageHandler get onMessageReceived => (message) async {
-        // 处理H5回调的值
-        NativeBridgeHelper.receiveMessage(message.message);
-        // 处理H5的请求
-        var item = messageFromJson(message.message);
-        var callMethod = controller.callMethodMap[item.api];
+    String? messageJson = message.message;
+    Message messageItem = messageFromJson(messageJson);
+    bool isResponseFlag = messageItem.isResponseFlag ?? false;
+    if (isResponseFlag) {
+      // 是返回的请求消息，则处理H5回调的值
+      NativeBridgeHelper.receiveMessage(messageJson);
+    } else {
+      // 不是返回的请求消息，处理H5端的请求
+      var callMethod = controller.callMethodMap[messageItem.api];
+      if (callMethod != null) {
         // 有相应的JS方法，则处理
-        if (callMethod != null) {
-          var data = await callMethod(item.data);
-          item.data = data.toString();
-          // 回调js，H5接受消息
-          var json = messageToJson(item);
-          controller.runJavascript("receiveMessage($json)");
-        }
-      };
+        var data = await callMethod(messageItem.data);
+        messageItem.data = data.toString();
+      } else {
+        // 若没有对应方法，则返回null，避免低版本未支持Api阻塞H5
+        messageItem.data = null;
+      }
+      // 回调js，类型为回复消息
+      messageItem.isResponseFlag = true;
+      var json = messageToJson(messageItem);
+      controller.runJavascript("receiveMessage($json)");
+    }
+  };
 }

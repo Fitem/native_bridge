@@ -2,8 +2,13 @@ let callbacks = {};
 let callbackId = 1;
 
 class JSBridgeHelper {
+    /**
+     * 发送消息
+     * @param api
+     * @param data
+     * @returns {Promise<unknown>}
+     */
     sendMessage(api, data) {
-
         return new Promise((resolve, reject) => {
             if (!api || api.length <= 0) {
                 reject('api is invalid');
@@ -28,35 +33,38 @@ class JSBridgeHelper {
         `);
                 return;
             }
-            /// encode message
+            // encode message
             const callbackId = this._pushCallback(resolve);
-            const encoded = JSON.stringify({
-                api: api,
-                data: data,
-                callbackId: callbackId,
-            });
-
-            nativeBridge.postMessage(encoded);
+            // 发送消息
+            this._postMessage(api, data, callbackId)
             // 增加回调异常容错机制，避免消息丢失导致一直阻塞
             setTimeout(() => {
                 const cb = this._popCallback(callbackId)
                 if (cb) {
                     cb(null)
                 }
-            }, 100)
+            }, 500)
         });
     }
 
+    /**
+     * 接受消息处理
+     * @param message
+     */
     receiveMessage(message) {
-        if (message.callbackId) {
+        // 新增isResponseFlag为true，避免App收到消息后需要再回复问题
+        if (message.isResponseFlag) {
             // 通过callbackId 获取对应Promise
             const cb = this._popCallback(message.callbackId);
-            if (cb) { //有值，则直接调用对应函数
+            if (cb) { // 有值，则直接调用对应函数
                 cb(message.data);
-            } else {  //没有值，则是App请求获取值
-                if (message.api === 'isHome') {
-                    this._postMessage(message.api, true.toString(), message.callbackId)
-                }
+            }
+        } else if (message.callbackId) {
+            if (message.api === 'isHome') {
+                this._postMessage(message.api, true, message.callbackId, true)
+            } else {
+                // 对为支持的api返回默认null
+                this._postMessage(message.api, null, message.callbackId, true)
             }
         }
     }
@@ -66,13 +74,15 @@ class JSBridgeHelper {
      * @param api
      * @param data
      * @param callbackId
+     * @param isResponseFlag
      * @private
      */
-    _postMessage(api, data, callbackId) {
+    _postMessage(api, data, callbackId, isResponseFlag = false) {
         const encoded = JSON.stringify({
             api: api,
             data: data,
             callbackId: callbackId,
+            isResponseFlag: isResponseFlag,
         })
         let nativeBridge = window.nativeBridge
         nativeBridge.postMessage(encoded)
@@ -96,7 +106,7 @@ class JSBridgeHelper {
     _popCallback(id) {
         if (callbacks[id]) {
             const cb = callbacks[id];
-            callbacks.id = null;
+            callbacks[id] = null;
             return cb;
         }
         return null

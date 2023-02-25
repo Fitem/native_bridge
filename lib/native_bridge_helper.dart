@@ -1,10 +1,8 @@
 import 'dart:async';
-
 import 'dart:convert';
 
 import 'package:native_bridge/bean/message.dart';
 import 'package:native_bridge/native_bridge_impl.dart';
-
 
 ///  Name: 原生桥帮助类
 ///  Created by Fitem on 2022/7/20
@@ -21,7 +19,7 @@ class NativeBridgeHelper {
     final res = messageToJson(message);
     nativeBridgeImpl.runJavascript("receiveMessage($res)");
     // 增加回调异常容错机制，避免消息丢失导致一直阻塞
-    Future.delayed(const Duration(milliseconds: 100), (){
+    Future.delayed(const Duration(milliseconds: 500), (){
       var completer = _popCallback(callbackId);
       completer?.complete(Future.value(null));
     });

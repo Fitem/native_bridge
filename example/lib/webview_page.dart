@@ -18,14 +18,14 @@ class WebViewPage extends StatefulWidget {
 }
 
 class _WebViewPageState<WebViewPage> extends State {
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
-
-  late NativeBridgeController _nativeBridgeController;
+  final Completer<WebViewController> _controller = Completer<WebViewController>();
+  late AppBridgeController _appBridgeController;
 
   @override
   void initState() {
     super.initState();
+    _appBridgeController = AppBridgeController()
+      ..controller = _controller.future;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       onLoadExample();
     });
@@ -48,10 +48,10 @@ class _WebViewPageState<WebViewPage> extends State {
               )
             ];
           }, onSelected: (value) async {
-            var isHome = await NativeBridgeHelper.sendMessage(
-                        Message(api: "isHome"), _nativeBridgeController)
-                    .future ??
-                false;
+            var isHome =
+                await NativeBridgeHelper.sendMessage(Message(api: "isHome"), _appBridgeController)
+                        .future ??
+                    false;
             AppUtil.show("isHome:$isHome");
           })
         ],
@@ -66,10 +66,7 @@ class _WebViewPageState<WebViewPage> extends State {
         //JS执行模式 是否允许JS执行
         javascriptMode: JavascriptMode.unrestricted,
         javascriptChannels: <JavascriptChannel>{
-          NativeBridge(
-            controller: _nativeBridgeController =
-                NativeBridgeController(controller: _controller.future),
-          )
+          NativeBridge(controller: _appBridgeController),
         },
       ),
     );
@@ -77,7 +74,6 @@ class _WebViewPageState<WebViewPage> extends State {
 
   /// 加载本地测试index.html
   Future<void> onLoadExample() async {
-    await _controller.future
-        .then((value) => value.loadFlutterAsset('assets/test/index.html'));
+    await _controller.future.then((value) => value.loadFlutterAsset('assets/test/index.html'));
   }
 }

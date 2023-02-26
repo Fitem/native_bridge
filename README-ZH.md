@@ -108,8 +108,7 @@ App端获取 H5端的值有两种方法：
 
 ### 系列文章
 
-使用介绍：[NativeBridge：基于webivew_flutter的JSBridge插件](https://juejin.cn/post/7170557198701953038/)
-
-原理解析：[NativeBridge：实现原理解析](https://juejin.cn/post/7172840863234523173)
-
-方案总结：[App实现JSBridge的最佳方案](https://juejin.cn/post/7177407635317063735)
+> 系列(一)：[NativeBridge：基于webivew_flutter的JSBridge插件](https://juejin.cn/post/7170557198701953038)  
+> 系列(二)：[NativeBridge：实现原理解析](https://juejin.cn/post/7172840863234523173)  
+> 系列(三)：[App实现JSBridge的最佳方案](https://juejin.cn/post/7177407635317063735)   
+> 系列(四)：[NativeBridge：我在Pub上发布的第一个插件](https://juejin.cn/post/7204349756620210236)

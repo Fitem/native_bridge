@@ -108,8 +108,8 @@ The first is more applicable and supports a variety of business scenarios, the l
 
 ### Related article
 
-Introduction to use：[NativeBridge：基于webivew_flutter的JSBridge插件](https://juejin.cn/post/7170557198701953038/)
 
-Plugin analysis：[NativeBridge：实现原理解析](https://juejin.cn/post/7172840863234523173)
-
-Scheme summary：[App实现JSBridge的最佳方案](https://juejin.cn/post/7177407635317063735)
+> Series 1：[NativeBridge：基于webivew_flutter的JSBridge插件](https://juejin.cn/post/7170557198701953038)  
+> Series 2：[NativeBridge：实现原理解析](https://juejin.cn/post/7172840863234523173)  
+> Series 3：[App实现JSBridge的最佳方案](https://juejin.cn/post/7177407635317063735)   
+> Series 4：[NativeBridge：我在Pub上发布的第一个插件](https://juejin.cn/post/7204349756620210236)

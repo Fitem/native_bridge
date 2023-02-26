@@ -22,7 +22,7 @@ abstract class NativeBridgeController with NativeBridgeImpl {
   final WebViewController controller;
 
   @override
-  void runJavascript(String javaScriptString) {
+  void runJavaScript(String javaScriptString) {
     controller.runJavaScript(javaScriptString);
   }
 
@@ -58,7 +58,7 @@ abstract class NativeBridgeController with NativeBridgeImpl {
       // 回调js，类型为回复消息
       messageItem.isResponseFlag = true;
       var json = messageToJson(messageItem);
-      runJavascript("receiveMessage($json)");
+      runJavaScript("receiveMessage($json)");
     }
   }
 }

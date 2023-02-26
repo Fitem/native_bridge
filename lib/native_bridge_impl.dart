@@ -1,5 +1,3 @@
-import 'package:webview_flutter/webview_flutter.dart';
-
 import 'native_bridge.dart';
 
 ///  Name: Native Bridge实现类
@@ -12,7 +10,7 @@ mixin NativeBridgeImpl {
   Map<String, Function?> get callMethodMap;
 
   /// 执行JS
-  void runJavascript(String javaScriptString);
+  void runJavaScript(String javaScriptString);
 
   /// 执行JS并返回结果
   Future<Object> runJavaScriptReturningResult(String javaScriptString);

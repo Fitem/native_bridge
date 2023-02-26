@@ -17,7 +17,7 @@ class NativeBridgeHelper {
     message.callbackId = callbackId;
     // H5接受消息
     final res = messageToJson(message);
-    nativeBridgeImpl.runJavascript("receiveMessage($res)");
+    nativeBridgeImpl.runJavaScript("receiveMessage($res)");
     // 增加回调异常容错机制，避免消息丢失导致一直阻塞
     Future.delayed(const Duration(milliseconds: 500), () {
       var completer = _popCallback(callbackId);

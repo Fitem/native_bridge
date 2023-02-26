@@ -7,10 +7,10 @@ abstract class NativeBridgeController with NativeBridgeImpl {
   NativeBridgeController();
 
   // WebView控制器
-  Future<WebViewController>? controller;
+  WebViewController? controller;
 
   @override
   void runJavascript(String javaScriptString) {
-    controller?.then((controller) => controller.runJavascript('receiveMessage($javaScriptString)'));
+    controller?.runJavaScript('receiveMessage($javaScriptString)');
   }
 }

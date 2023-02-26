@@ -2,72 +2,60 @@
 
 [![Pub](https://img.shields.io/pub/v/native_bridge.svg)](https://pub.dev/packages/native_bridge)
 
-基于 [webview_flutter](https://pub.dev/packages/webview_flutter) 插件实现 **App端** 和 **H5端** 的 JS 互调能力的插件 [NativeBridge](https://pub.dev/packages/native_bridge) 。
+[NativeBridge](https://pub.dev/packages/native_bridge) is a plugin based on [webview_flutter](https://pub.dev/packages/webview_flutter) that realizes JS intermodulation capability between App and H5.
 
-### NativeBridge 插件的优点
+Language: English | [简体中文](README-ZH.md)
 
-1. 支持 H5 端调用 App 端的 JSBridge 方法，并可以直接获取返回值。
-2. 支持 App 端调用 H5 端的  JSBridge 方法，并可以直接获取返回值。
-3. 使用简单，集成插件后实现 NativeBridgeImpl 类，即可完成 App 端的 JS 调用能力的支持。
+### Advantages of NativeBridge
 
-### NativeBridge 的引入
+1. Support the H5 to call the JSBridge method on the App, and can directly get the return value.
+2. Support App call H5 JSBridge method, and can directly get the return value.
+3. It is simple to use and extend the NativeBridgeController class after integration to support the JavaScript calling ability of App.
 
-在 pubspec.yaml 中添加依赖：
+### NativeBridge dependency
+
+Add dependencies in pubspec.yaml:
 
 ~~~yaml
 dependencies：
   native_bridge: ^latest_version
 ~~~
 
-### NativeBridge 的集成
+### Use of NativeBridge
 
-1. 实现 NativeBridgeImpl 类
+1. extend `NativeBridgeController`
 
 ~~~dart
-class NativeBridgeController implements NativeBridgeImpl {
-  NativeBridgeController({required this.controller});
+class AppBridgeController extends NativeBridgeController {
+  AppBridgeController(WebViewController controller) : super(controller);
 
-  // WebView控制器
-  final Future<WebViewController> controller;
-
-  /// 对应JS调用Function集合
+  /// Define the JSChannel name
   @override
-  Map<String, Function?> get callMethodMap => {
-        // 版本号
+  get name => "nativeBridge";
+
+  @override
+  Map<String, Function?> get callMethodMap => <String, Function?>{
+        // Version number
         "getVersionCode": (data) async {
           return await AppUtil.getVersion();
         },
         ...
-    // 添加更多调用方法
       };
-
-  /// 指定JSChannel名称
-  @override
-  String get name => "nativeBridge";
-
-  /// 执行JS
-  @override
-  void runJavascript(String javaScriptString) {
-    controller.then((controller) =>
-        controller.runJavascript("receiveMessage($javaScriptString)"));
-  }
 }
 ~~~
 
-2. 在 WebView 组件中添加 **NativeBridge**。
+2. Init AppBridgeController.
 
 ~~~dart
-//JS执行模式 是否允许JS执行
-javascriptMode: JavascriptMode.unrestricted,
-javascriptChannels: <JavascriptChannel>{
-    NativeBridge(
-        controller: _nativeBridgeController =
-             NativeBridgeController(controller: _controller.future),
-    )
-}
+// Init WebViewController
+_controller = WebViewController()
+  ..enableZoom(true)
+  ..loadFlutterAsset('assets/test/index.html');
+// Init AppBridgeController
+_appBridgeController = AppBridgeController(_controller);
 ~~~
 
-3. 在 H5 端添加 `receiveMessage` 方法。
+3. Add the `receiveMessage` method to **H5**.
 ~~~javascript
 function receiveMessage(jsonStr) {
     if(jsonStr != undefined && jsonStr != "") {
@@ -77,11 +65,9 @@ function receiveMessage(jsonStr) {
 }
 ~~~
 
-### NativeBridge 的使用
+#### 一、H5 get the value of the App
 
-#### 一、H5端 获取 App端 的值
-
-1. 在 App端 的 callMethodMap 中 **定义方法名称** 和 **Function调用**，比如获取 App 的版本号：
+1. Define method names and Function calls in the App's callMethodMap, for example, to get the App version number:
 
 ```dart
 // 版本号
@@ -90,21 +76,40 @@ function receiveMessage(jsonStr) {
 }
 ```
 
-2. 在 H5端 中调用对应方法：
+2. Call the corresponding method in H5:
 
 ```javascript
 async function getVersionName() {
     // 获取 App 的值
     let appVersionName = await window.jsBridgeHelper.sendMessage("getVersionName", null);
-    // 显示
-    document.getElementById("app_version_name").innerHTML = "app version name : " + appVersionName.toString();
 }
 ```
+#### 二、App gets the value of H5
 
-### 系列文章
+There are two ways for the App to get the value of H5:
 
-使用介绍：[NativeBridge：基于webivew_flutter的JSBridge插件](https://juejin.cn/post/7170557198701953038/)
+1. AppBridgeController's `sendMessage` method.
 
-原理解析：[NativeBridge：实现原理解析](https://juejin.cn/post/7172840863234523173)
+   ~~~dart
+   // is home page
+   bool? isHome = await _appBridgeController.sendMessage(Message(api: 'isHome'));
+   ~~~
 
-方案总结：[App实现JSBridge的最佳方案](https://juejin.cn/post/7177407635317063735)
+2. Call AppBridgeController ` runJavaScriptReturningResult ` method.
+
+   ~~~dart
+   // get UserAgent
+   var userAgent = await _appBridgeController.runJavaScriptReturningResult('getUserAgent()');
+   ~~~
+
+The difference is the first sends a message to H5 the WebViewController's `runJavaScript`  and waits for H5 to reply to the message. The last user WebViewController ` runJavaScriptReturningResult ` method directly to obtain the return value.
+
+The first is more applicable and supports a variety of business scenarios, the last is more suitable for obtaining Window-related properties.
+
+### Related article
+
+Introduction to use：[NativeBridge：基于webivew_flutter的JSBridge插件](https://juejin.cn/post/7170557198701953038/)
+
+Plugin analysis：[NativeBridge：实现原理解析](https://juejin.cn/post/7172840863234523173)
+
+Scheme summary：[App实现JSBridge的最佳方案](https://juejin.cn/post/7177407635317063735)

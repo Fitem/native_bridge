@@ -18,8 +18,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # webview
-  webview_flutter: ^4.0.5
   # package信息
   package_info_plus: 1.4.2
   # 提示 toast

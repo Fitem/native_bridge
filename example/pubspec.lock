@@ -260,7 +260,7 @@ packages:
     source: hosted
     version: "2.1.2"
   webview_flutter:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: webview_flutter
       url: "https://pub.flutter-io.cn"

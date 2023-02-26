@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter/services.dart';
-
-import 'package:native_bridge/bean/message.dart';
-import 'package:native_bridge/native_bridge_helper.dart';
+import 'package:native_bridge/native_bridge.dart';
 import 'package:native_bridge_example/native_bridge_controller.dart';
 import 'package:native_bridge_example/utils/app_util.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized(); // 确定初始化
@@ -18,11 +15,10 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Native Bridge",
+      title: 'Native Bridge',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -48,40 +44,43 @@ class _WebViewPageState<WebViewPage> extends State {
   @override
   void initState() {
     super.initState();
-    // 初始化AppBridgeController
-    _appBridgeController = AppBridgeController();
     // 初始化WebViewController
     _controller = WebViewController()
       ..enableZoom(true)
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..addJavaScriptChannel(
-        _appBridgeController.name,
-        onMessageReceived: _appBridgeController.onMessageReceived,
-      )
       ..loadFlutterAsset('assets/test/index.html');
-    // 设置WebViewController
-    _appBridgeController.controller = _controller;
+    // 初始化AppBridgeController
+    _appBridgeController = AppBridgeController(_controller);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Native Bridge"),
+        title: const Text('Native Bridge'),
         actions: [
           PopupMenuButton(itemBuilder: (context) {
             return [
               const PopupMenuItem<int>(
                 value: 0,
-                child: Text("Is web home?"),
+                child: Text('App获取H5数据'),
+              ),
+              const PopupMenuItem<int>(
+                value: 1,
+                child: Text('App获取H5数据(直接获取)'),
               )
             ];
           }, onSelected: (value) async {
-            var isHome =
-                await NativeBridgeHelper.sendMessage(Message(api: "isHome"), _appBridgeController)
-                        .future ??
-                    false;
-            AppUtil.show("isHome:$isHome");
+            switch (value) {
+              case 0:
+                bool? isHome = await _appBridgeController.sendMessage(Message(api: 'isHome'));
+                AppUtil.show('isHome:$isHome');
+                break;
+              case 1:
+                var userAgent =
+                    await _appBridgeController.runJavaScriptReturningResult('getUserAgent()');
+                AppUtil.show('userAgent:$userAgent');
+                break;
+            }
           })
         ],
       ),

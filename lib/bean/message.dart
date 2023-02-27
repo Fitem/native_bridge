@@ -15,13 +15,13 @@ class Message {
   });
 
   String api; // 调用方法api
-  String? data; // 数据
+  dynamic data; // 数据
   String? callbackId; // 对应id
   bool? isResponseFlag; // 是否是返回消息标记
 
   factory Message.fromJson(Map<String, dynamic> json) => Message(
         api: json["api"],
-        data: json["data"] == null ? null : jsonEncode(json["data"]),
+        data: json["data"],
         callbackId: json["callbackId"],
         isResponseFlag: json["isResponseFlag"],
       );

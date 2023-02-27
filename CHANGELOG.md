@@ -2,6 +2,10 @@
 
 Language: English | [简体中文](CHANGELOG-ZH.md)
 
+## 1.0.1
+
+- Fixed jsonEncode issue when Message serializes common types
+
 ## 1.0.0
 
 - adaptive webview_flutter: ^4.0.5

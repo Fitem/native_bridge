@@ -2,6 +2,10 @@
 
 Language: [English](CHANGELOG.md) | 简体中文
 
+## 1.0.1
+
+- 修复Message序列化常用类型时被jsonEncode问题
+
 ## 1.0.0
 
 - 适配 webview_flutter: ^4.0.5 版本
